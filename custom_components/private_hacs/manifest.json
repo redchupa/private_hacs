@@ -2,11 +2,11 @@
   "domain": "private_hacs",
   "name": "Private HACS",
   "version": "1.0.0",
-  "documentation": "https://github.com/Murianwind/private-hacs",
-  "issue_tracker": "https://github.com/Murianwind/private-hacs/issues",
+  "documentation": "https://github.com/redchupa/private_hacs",
+  "issue_tracker": "https://github.com/redchupa/private_hacs/issues",
   "dependencies": [],
   "codeowners": [
-    "@Murianwind"
+    "@redchupa"
   ],
   "config_flow": true,
   "iot_class": "cloud_polling",
