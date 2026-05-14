@@ -88,28 +88,61 @@ GitHub → Settings → Developer settings → **Personal access tokens** → **
 
 ---
 
-## 설정
+## 설정 및 사용 방법 (전체 워크플로우)
 
-### 1. Integration 추가
+> Private HACS 설치까지 끝났다는 가정으로 진행합니다. 아직 설치 전이면 위 "설치" 섹션부터 보세요.
 
-**Settings → Devices & Services → Add Integration** → `Private HACS` 검색
+### STEP 1. 통합(Integration) 추가 및 PAT 입력
 
-### 2. 토큰 입력
-
-- Private 저장소: 위에서 발급한 PAT 입력
+1. **Settings → Devices & Services → + Add Integration**
+2. 검색창에 `Private HACS` 입력 → 선택
+3. 위에서 발급한 **PAT 토큰**(`ghp_...`)을 붙여넣기 → **제출**
+4. 좌측 사이드바에 **Private HACS** 패널이 생기면 성공
 
 > 토큰은 HA 내부 스토리지에 암호화되어 저장됩니다.
 
-### 3. 저장소 추가 (패널에서)
+### STEP 2. 관리할 Private 저장소 준비
 
-설치 완료 후 좌측 사이드바에 **Private HACS** 패널이 생깁니다.
+HACS처럼 인식되려면 GitHub 저장소가 다음 구조여야 합니다.
+
+```
+my-repo/
+├── custom_components/
+│   └── my_integration/
+│       ├── __init__.py
+│       ├── manifest.json
+│       └── ...
+└── (README.md 등은 선택)
+```
+
+핵심:
+- 최상위에 `custom_components/<도메인>/` 폴더가 있어야 합니다.
+- `<도메인>` 이름은 `manifest.json`의 `"domain"` 값과 일치해야 합니다.
+- 저장소 공개 여부는 **private이어도 OK** (PAT로 접근하므로).
+
+### STEP 3. 패널에서 저장소 등록
+
+좌측 사이드바 **Private HACS** 패널에서:
 
 1. **＋ 저장소 추가** 클릭
 2. GitHub URL 또는 `owner/repo-name` 입력
-   - 예: `https://github.com/your-org/your-integration`
-   - 예: `your-org/your-integration`
-3. 저장소 정보가 자동으로 조회됩니다
+   - 예: `https://github.com/redchupa/my-private-integration`
+   - 예: `redchupa/my-private-integration`
+3. 저장소 정보가 자동으로 조회됩니다 (PAT 토큰으로 GitHub API 호출)
 4. **추가** 클릭
+
+### STEP 4. 설치 및 적용
+
+1. 등록된 저장소 항목에서 **설치** 버튼 클릭
+2. GitHub에서 직접 코드를 받아 HA의 `custom_components/<도메인>/`에 복사됩니다.
+3. **Home Assistant 재시작**
+4. **Settings → Devices & Services → + Add Integration** → 방금 설치한 통합 검색 → 추가
+
+### STEP 5. 이후 업데이트
+
+- 패널에서 **새로고침** 버튼 → 최신 버전 확인
+- 새 버전이 있으면 **업데이트** 버튼 표시 → 클릭 → HA 재시작
+- 또는 HA 기본 **Updates** 대시보드에서도 업데이트 가능 (자동 생성된 `update.*` 엔티티 사용)
 
 ---
 
