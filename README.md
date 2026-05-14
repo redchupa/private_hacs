@@ -232,6 +232,74 @@ HA 기본 **Updates** 대시보드에서도 확인 및 업데이트 가능.
 
 ---
 
+## 부록: Private **Add-on**(에드온) 저장소 설치 방법
+
+> Private HACS는 **통합(Integration)** 전용입니다. **Add-on(에드온)** 은 HA의 Supervisor가 직접 `git clone`으로 가져오기 때문에, Private HACS 같은 별도 도구 없이 **URL에 토큰을 포함**시키는 것으로 private 저장소를 그대로 사용할 수 있습니다.
+
+### 사용 시나리오
+
+다음과 같은 구조의 GitHub 저장소를 private으로 운영하고 싶을 때 사용하세요.
+
+```
+my-addon-repo/
+├── repository.yaml
+└── my_addon/
+    ├── config.yaml          (또는 config.json)
+    ├── Dockerfile
+    ├── run.sh
+    └── ...
+```
+
+### 1단계: GitHub Personal Access Token 발급
+
+위 "GitHub Personal Access Token 발급" 섹션과 동일합니다.
+
+- 권장: `Fine-grained token` → 해당 저장소만 선택 → `Contents: Read-only`
+- 또는: `Classic token` → `repo` scope 전체 체크
+
+### 2단계: 토큰을 포함한 URL로 저장소 등록
+
+**Settings → Add-ons → Add-on Store → 우측 상단 ⋮ → Repositories**
+
+URL 형식:
+```
+https://<TOKEN>@github.com/<user>/<repo>
+```
+
+예시:
+```
+https://ghp_AbCdEf123456@github.com/redchupa/my-private-addon
+```
+
+추가 후 잠시 기다리면 Add-on Store에 해당 저장소의 에드온들이 표시됩니다. 평소처럼 **Install** 버튼으로 설치하면 됩니다.
+
+### 3단계: 토큰 갱신 시
+
+토큰이 만료되거나 재발급한 경우:
+1. **Repositories** 에서 기존 URL 삭제
+2. 새 토큰으로 다시 추가
+
+### ⚠️ 보안 주의사항
+
+| 항목 | 내용 |
+|---|---|
+| 🔒 백업 파일 | HA 백업에 토큰이 포함된 URL이 그대로 저장됩니다. 백업 파일 외부 공유 금지 (또는 비밀번호 보호 권장). |
+| 📋 로그 마스킹 | Supervisor 로그에 토큰이 노출될 수 있습니다. 로그 공유 시 `ghp_...` 부분 가리고 공유하세요. |
+| 🚫 토큰 공유 금지 | 토큰은 GitHub 비밀번호와 동일한 수준의 자격증명입니다. 어떤 경우에도 타인에게 공유하지 마세요. |
+| ⏰ 유출 시 즉시 회수 | https://github.com/settings/tokens 에서 해당 토큰을 **Revoke** → 새로 발급 → 위 2단계로 URL 재등록 |
+| 🔍 권한 최소화 | 가능하면 Fine-grained token으로 **해당 저장소 + Read-only**만 부여하여 사고 시 피해 최소화 |
+
+### 정리: 통합 vs 에드온 Private 운영 방식
+
+| 구분 | 통합 (Integration) | 에드온 (Add-on) |
+|---|---|---|
+| 도구 | **Private HACS** 사용 | 별도 도구 불필요 |
+| 인증 방식 | 통합 설정에서 PAT 입력 (저장소 URL에는 토큰 없음) | URL에 토큰 직접 삽입 |
+| 설치 위치 | `/config/custom_components/<domain>/` | Supervisor가 관리하는 컨테이너 |
+| 업데이트 | Private HACS 패널에서 관리 | Add-on Store의 Update 버튼 |
+
+---
+
 ## License
 
 MIT
