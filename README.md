@@ -181,3 +181,14 @@ HA 기본 **Updates** 대시보드에서도 확인 및 업데이트 가능.
 ## License
 
 MIT
+
+---
+
+## 프로젝트 출처
+
+본 프로젝트는 아래 원본 저장소를 기반으로 합니다.
+
+- **원본 저장소**: [Murianwind/private_hacs](https://github.com/Murianwind/private_hacs)
+- **원작자**: [@Murianwind](https://github.com/Murianwind)
+
+원작자 및 모든 기여자분들께 감사드립니다.
